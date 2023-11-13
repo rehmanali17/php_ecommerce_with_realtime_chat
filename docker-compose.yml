@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: ecommerce_app
+    build:
+      context: docker-images/app
+    image: ecommerce_app
+    volumes:
+      - "./app:/var/www"
+    networks:
+      - ecommerce-net
+    depends_on:
+      - dbserver
+
+  webserver:
+    container_name: ecommerce_webserver
+    build:
+      context: docker-images/nginx
+    image: ecommerce_webserver
+    ports:
+      - "8081:80"
+    volumes:
+      - "./app:/var/www"
+      - "./docker-images/nginx/config:/etc/nginx/conf.d/"
+    networks:
+      - ecommerce-net
+    depends_on:
+      - app
+      - dbserver
+
+  dbserver:
+    container_name: ecommerce_dbserver
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ecommerce
+      MYSQL_ROOT_PASSWORD: rootPassword123!
+      MYSQL_USER: ecommerce_user
+      MYSQL_PASSWORD: ecommercePassword123!
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./dbdata:/var/lib/mysql"
+      - "./docker-images/mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf"
+    networks:
+      - ecommerce-net
+
+networks:
+  ecommerce-net:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

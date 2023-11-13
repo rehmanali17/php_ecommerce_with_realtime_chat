@@ -47,9 +47,12 @@
             $stored_hashed_password = $row['password'];
 
             if (password_verify($password, $stored_hashed_password)) {
-                session_start();
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
                 $_SESSION['user'] = $row;
-                header('Location: dashboard/index.php');
+                echo '<script>window.location.href = "dashboard/index.php";</script>';
+                exit;
             } else {
                 echo "
                         <div class='alert alert-danger alert-dismissible fade show' role='alert'>

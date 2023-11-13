@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION['alert-message'])) {
     echo "
             <div class='alert " . $_SESSION['alert-type'] . " alert-dismissible fade show' role='alert'>

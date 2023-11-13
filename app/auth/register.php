@@ -70,7 +70,8 @@
                         'type' => $user_type
                 ];
                 $_SESSION['user'] = $user;
-                header('Location: ../dashboard/index.php');
+                echo '<script>window.location.href = "../dashboard/index.php";</script>';
+                exit;
 
             } catch (Exception $e) {
                 echo "

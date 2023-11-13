@@ -20,7 +20,7 @@ $db = new DatabaseConnection();
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="../dashboard/index.php">Product Management</a>
+        <a class="navbar-brand" href="index.php">Product Management</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -54,7 +54,6 @@ $db = new DatabaseConnection();
 
 <div class="container mt-3">
     <?php include '../helpers/session-message.php' ?>
-
 </div>
 
 <div class="tab-content pt-2" id="tab-content">

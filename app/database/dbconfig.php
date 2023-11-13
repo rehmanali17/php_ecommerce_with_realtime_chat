@@ -1,11 +1,10 @@
 <?php
 
 class DatabaseConnection {
-    private $host = 'localhost';
-    private $username = 'root';
-    private $password = 'Ts123456!';
-    private $database = 'php_ecommerce';
-    private $port = '3306';
+    private $host = 'ecommerce_dbserver';
+    private $database = 'ecommerce';
+    private $user = 'ecommerce_user';
+    private $password = 'ecommercePassword123!';
     private $conn;
 
     /**
@@ -21,7 +20,7 @@ class DatabaseConnection {
 
         try {
             // Create the PDO connection
-            $this->conn = new PDO("mysql:host=$this->host;port=$this->port;dbname=$this->database", $this->username, $this->password);
+            $this->conn = new PDO("mysql:host=$this->host;dbname=$this->database", $this->user, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die("Connection failed: " . $e->getMessage());
