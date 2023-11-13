@@ -36,3 +36,25 @@ This guide provides step-by-step instructions to set up and run the project on y
 
 5. **Project Setup Complete:**
    Once you have completed the above steps, the project is now set up on your local machine and ready for use.
+
+## Running application in docker
+
+1. **Install Docker:**
+   Make sure you have docker installed with version `24.0.7 ` or higher. Please verify the docker installation by
+   running the version command.
+
+   ```php
+   docker --version && docker-compose --version
+   
+2. **Spinning the containers**
+   Navigate to the source directory. and run the following command
+   
+   ```php
+   docker-compose up -d
+   ```
+   It will take some time on first installation to fetch/create the images.
+
+
+3. **Testing**
+   Please enter `http:localhost:8081` in browser to run the application. Please follow above guidelines to set up
+   database and tables.
