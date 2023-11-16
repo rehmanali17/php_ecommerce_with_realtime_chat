@@ -8,15 +8,9 @@ $db = new DatabaseConnection();
 
 try {
 
-    $sql = "UPDATE products SET name = :name, description = :description, price = :price, quantity = :quantity WHERE id = :id";
+    $sql = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?";
     $productData = json_decode($_POST['productData'], true);
-    $queryArgs = [
-        ':name' => $productData['name'],
-        ':description' => $productData['description'],
-        ':price' => $productData['price'],
-        ':quantity' => $productData['quantity'],
-        ':id' => $productData['id'],
-    ];
+    $queryArgs = array($productData['name'], $productData['description'], $productData['price'], $productData['quantity'], $productData['id']);
     $statement = $db->executePreparedQuery($sql, $queryArgs);
     $_SESSION['alert-message'] = 'Product updated successfully';
     $_SESSION['alert-type'] = 'alert-success';

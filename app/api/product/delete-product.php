@@ -12,10 +12,8 @@ try{
     $data = json_decode($request_data, true);
     $productId = $data['id'];
 
-    $sql = "DELETE FROM products where id = :id";
-    $queryArgs = [
-        ':id' =>  $productId
-    ];
+    $sql = "DELETE FROM products where id = ?";
+    $queryArgs = array($productId);
     $statement = $db->executePreparedQuery($sql, $queryArgs);
 
     $_SESSION['alert-message'] = 'Product deleted successfully';

@@ -15,16 +15,10 @@ if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
 
         if(move_uploaded_file($temp_file, $destination)){
 
-            $sql = "INSERT INTO products (name, description, price, quantity, file_path, created_by) VALUES (:name, :description, :price, :quantity, :file_path, :created_by)";
+            $sql = "INSERT INTO products (name, description, price, quantity, file_path, created_by) VALUES (?, ?, ?, ?, ?, ?)";
             $productData = json_decode($_POST['productData'], true);
-            $queryArgs = [
-                ':name' => $productData['name'],
-                ':description' => $productData['description'],
-                ':price' => $productData['price'],
-                ':quantity' => $productData['quantity'],
-                ':file_path' => substr($destination, 3),
-                ':created_by' => $_SESSION['user']['id']
-            ];
+            $queryArgs = array($productData['name'], $productData['description'], $productData['price'],
+                               $productData['quantity'], substr($destination, 3), $_SESSION['user']['id']);
 
             $statement = $db->executePreparedQuery($sql, $queryArgs);
 

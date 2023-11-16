@@ -18,34 +18,9 @@ const updateProductQuantity = document.getElementById('updateProductQuantity');
 const updateProductModalBtn = document.getElementById('updateProductModalBtn');
 
 // Chat Container Elements
-const sendChatMessageBtn = document.getElementById('sendChatMessageBtn');
 const chatMessageInput = document.getElementById('chatMessageInput');
 const chatHistoryContainer = document.getElementById('chatHistoryContainer');
 let incomingId = 0;
-
-sendChatMessageBtn.onclick = ()=>{
-    const message = chatMessageInput.value;
-    if(message){
-        const messageData = {
-            incoming_id: incomingId,
-            message
-        }
-        let xhr = new XMLHttpRequest();
-        xhr.onload = ()=>{
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    chatMessageInput.value = "";
-                    scrollToBottom();
-                }
-            }
-        }
-        let formData = new FormData();
-        formData.append('chatData', JSON.stringify(messageData))
-
-        xhr.open("POST", "../../api/chat/insert-chat.php", true);
-        xhr.send(formData);
-    }
-}
 
 addProductModal.addEventListener('shown.bs.modal', () => {
     addProductName.focus();
@@ -114,14 +89,41 @@ document.addEventListener("click", async function(event){
         });
         location.reload()
     }
+
     if(event.target.id === 'chatHistoryUser'){
         incomingId = event.target.getAttribute('data-id');
         removeClass('chat-history-active-user');
         event.target.parentNode.parentNode.classList.add('chat-history-active-user');;
     }
+
     if(event.target.id === 'fill-tab-0' || event.target.id === 'fill-tab-1'){
         incomingId = 0;
     }
+
+    if(event.target.id === 'sendChatMessageBtn'){
+        const message = chatMessageInput.value;
+        if(message){
+            const messageData = {
+                incoming_id: incomingId,
+                message
+            }
+            let xhr = new XMLHttpRequest();
+            xhr.onload = ()=>{
+                if(xhr.readyState === XMLHttpRequest.DONE){
+                    if(xhr.status === 200){
+                        chatMessageInput.value = "";
+                        scrollToBottom();
+                    }
+                }
+            }
+            let formData = new FormData();
+            formData.append('chatData', JSON.stringify(messageData))
+
+            xhr.open("POST", "../../api/chat/insert-chat.php", true);
+            xhr.send(formData);
+        }
+    }
+
 });
 
 async function openUpdateProductModal(id) {

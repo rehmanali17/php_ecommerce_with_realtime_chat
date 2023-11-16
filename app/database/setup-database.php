@@ -21,7 +21,6 @@ class DatabaseMigration {
             password VARCHAR(255),
             display_name VARCHAR(255),
             mobile_number VARCHAR(255),
-            type ENUM('BUYER', 'SELLER'),
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
 

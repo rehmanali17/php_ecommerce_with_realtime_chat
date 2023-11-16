@@ -35,12 +35,9 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
         $mobile_number = $_POST['mobile_number'];
-        $user_type = $_POST['user_type'];
 
-        $sql = "SELECT 1 FROM users WHERE username = :username";
-        $args = [
-            ':username' => $username
-        ];
+        $sql = "SELECT 1 FROM users WHERE username = ?";
+        $args = array($username);
         $statement = $db->executePreparedQuery($sql, $args);
 
 
@@ -49,25 +46,18 @@
 
             try {
 
-                $sql = "INSERT INTO users(username, password, display_name, mobile_number, type) VALUES(:username, :password, :display_name, :mobile_number, :type)";
+                $sql = "INSERT INTO users(username, password, display_name, mobile_number) VALUES(?, ?, ?, ?)";
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-                $args = [
-                    ':username' => $username,
-                    ':password' => $hashed_password,
-                    ':display_name' => $display_name,
-                    ':mobile_number' => $mobile_number,
-                    ':type' => $user_type,
-                ];
+                $args = array($username, $hashed_password, $display_name, $mobile_number);
 
                 $statement = $db->executePreparedQuery($sql, $args);
 
                 $lastInsertId = $db->getConn()->lastInsertId();
                 $user = [
-                        'id' => $lastInsertId,
-                        'username' => $username,
-                        'display_name' => $display_name,
-                        'mobile_number' => $mobile_number,
-                        'type' => $user_type
+                     'id' => $lastInsertId,
+                     'username' => $username,
+                     'display_name' => $display_name,
+                     'mobile_number' => $mobile_number
                 ];
                 $_SESSION['user'] = $user;
                 echo '<script>window.location.href = "../dashboard/index.php";</script>';
@@ -107,16 +97,6 @@
         <div class="mb-3">
             <label for="mobile_number" class="form-label">Mobile Number</label>
             <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
-        </div>
-        <div class="mb-3">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_type" id="inlineRadio1" value="BUYER">
-                <label class="form-check-label" for="inlineRadio1">BUYER</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_type" id="inlineRadio2" value="SELLER">
-                <label class="form-check-label" for="inlineRadio2">SELLER</label>
-            </div>
         </div>
         <button type="submit" name="register-btn" class="btn btn-primary btn-block">Register</button>
     </form>

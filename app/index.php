@@ -34,10 +34,8 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $sql = "SELECT id,username,password,display_name,mobile_number,type FROM users WHERE username = :username";
-        $args = [
-            ':username' => $username
-        ];
+        $sql = "SELECT id,username,password,display_name,mobile_number FROM users WHERE username = ?";
+        $args = array($username);
         $statement = $db->executePreparedQuery($sql, $args);
 
         if ($statement->rowCount() > 0) {

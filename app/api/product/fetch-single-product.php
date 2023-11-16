@@ -12,10 +12,8 @@ try{
     $data = json_decode($request_data, true);
     $id = $data['id'];
 
-    $sql = "SELECT * FROM products WHERE id = :id";
-    $queryArgs = [
-        ':id' => $id
-    ];
+    $sql = "SELECT * FROM products WHERE id = ?";
+    $queryArgs = array($id);
     $statement = $db->executePreparedQuery($sql, $queryArgs);
     $row = $statement->fetch(PDO::FETCH_ASSOC);
     echo json_encode($row);

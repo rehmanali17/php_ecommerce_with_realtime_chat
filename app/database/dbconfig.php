@@ -38,8 +38,8 @@ class DatabaseConnection {
      */
     public function executePreparedQuery($sql, $args) {
         $statement = $this->conn->prepare($sql);
-        foreach ($args as $key => $value){
-            $args[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        foreach ($args as &$value) {
+            $value = htmlentities($value);
         }
         $statement->execute($args);
         return $statement;
