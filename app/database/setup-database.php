@@ -17,7 +17,7 @@ class DatabaseMigration {
     public function createUsersTable() {
         $sql = "CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(255) UNIQUE,
+            username VARCHAR(127) UNIQUE,
             password VARCHAR(255),
             display_name VARCHAR(255),
             mobile_number VARCHAR(255),

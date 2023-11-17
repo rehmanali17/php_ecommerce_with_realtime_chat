@@ -7,13 +7,21 @@ $db = new DatabaseConnection();
 $outgoing_id = $_SESSION['user']['id'];
 $incoming_id = $_POST['incoming_id'];
 $output = "";
-$sql = "SELECT msgs.message, msgs.outgoing_id, msgs.incoming_id, usr.display_name, msgs.created_at FROM messages msgs LEFT JOIN users usr ON usr.id = msgs.outgoing_id
+$conn = $db->getConn();
+$query = $conn->prepare("SELECT msgs.message, msgs.outgoing_id, msgs.incoming_id, usr.display_name, msgs.created_at FROM messages msgs LEFT JOIN users usr ON usr.id = msgs.outgoing_id
             WHERE (msgs.outgoing_id = ? AND msgs.incoming_id = ?)
-            OR (msgs.outgoing_id = ? AND msgs.incoming_id = ?) ORDER BY msgs.created_at ASC";
-$queryArgs = array($outgoing_id, $incoming_id, $incoming_id, $outgoing_id);
-$statement = $db->executePreparedQuery($sql, $queryArgs);
-if($statement->rowCount() > 0){
-    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+            OR (msgs.outgoing_id = ? AND msgs.incoming_id = ?) ORDER BY msgs.created_at ASC");
+$query->execute(
+            array(
+                htmlentities($outgoing_id),
+                htmlentities($incoming_id),
+                htmlentities($incoming_id),
+                htmlentities($outgoing_id)
+            )
+        );
+$result = $query;
+if($result->rowCount() > 0){
+    $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $row){
         if($row['outgoing_id'] == $outgoing_id){
             $output .= '<li class="clearfix">

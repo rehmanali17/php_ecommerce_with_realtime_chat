@@ -36,23 +36,32 @@
         $password = $_POST['password'];
         $mobile_number = $_POST['mobile_number'];
 
-        $sql = "SELECT 1 FROM users WHERE username = ?";
-        $args = array($username);
-        $statement = $db->executePreparedQuery($sql, $args);
+        $conn = $db->getConn();
+        $query = $conn->prepare("SELECT 1 FROM users WHERE username = ?");
+        $query->execute(
+            array(
+                htmlentities($username)
+            )
+        );
+        $result = $query;
 
 
-
-        if ($statement->rowCount() <= 0) {
+        if ($result->rowCount() <= 0) {
 
             try {
 
-                $sql = "INSERT INTO users(username, password, display_name, mobile_number) VALUES(?, ?, ?, ?)";
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-                $args = array($username, $hashed_password, $display_name, $mobile_number);
+                $query = $conn->prepare("INSERT INTO users(username, password, display_name, mobile_number) VALUES(?, ?, ?, ?)");
+                $query->execute(
+                    array(
+                        htmlentities($username),
+                        htmlentities($hashed_password),
+                        htmlentities($display_name),
+                        htmlentities($mobile_number)
+                    )
+                );
 
-                $statement = $db->executePreparedQuery($sql, $args);
-
-                $lastInsertId = $db->getConn()->lastInsertId();
+                $lastInsertId = $conn->lastInsertId();
                 $user = [
                      'id' => $lastInsertId,
                      'username' => $username,

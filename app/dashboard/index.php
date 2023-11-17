@@ -2,6 +2,7 @@
 require '../helpers/authentication.php';
 require '../database/dbconfig.php';
 $db = new DatabaseConnection();
+$conn = $db->getConn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,16 +58,20 @@ $db = new DatabaseConnection();
             <div class="container py-5">
                 <div class="row">
                     <?php
-                    $sql = "SELECT prod.id AS prodId, prod.name AS prodName, prod.description, prod.price, prod.quantity, prod.file_path, usr.id AS usrId, usr.display_name AS userName 
+                    $created_by = $_SESSION['user']['id'];
+                    $query = $conn->prepare("SELECT prod.id AS prodId, prod.name AS prodName, prod.description, prod.price, prod.quantity, prod.file_path, usr.id AS usrId, usr.display_name AS userName 
                                                          FROM products prod
                                                          JOIN users usr ON usr.id = prod.created_by
-                                                         WHERE prod.created_by != ? ORDER BY prod.created_at DESC;";
-                    $created_by = $_SESSION['user']['id'];
-                    $queryArgs = array($created_by);
-                    $statement = $db->executePreparedQuery($sql, $queryArgs);
+                                                         WHERE prod.created_by != ? ORDER BY prod.created_at DESC");
+                    $query->execute(
+                        array(
+                            htmlentities($created_by)
+                        )
+                    );
+                    $result = $query;
 
-                    if ($statement->rowCount() > 0) {
-                        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    if ($result->rowCount() > 0) {
+                        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($rows as $row) {
                             ?>
                             <div class="col-md-12 col-lg-4 mb-4">
@@ -221,13 +226,17 @@ $db = new DatabaseConnection();
             <div class="container py-5">
                 <div class="row">
                     <?php
-                    $sql = "SELECT id, name, description, price, quantity, file_path FROM products WHERE created_by = ? ORDER BY created_at DESC;";
                     $created_by = $_SESSION['user']['id'];
-                    $queryArgs = array($created_by);
-                    $statement = $db->executePreparedQuery($sql, $queryArgs);
+                    $query = $conn->prepare("SELECT id, name, description, price, quantity, file_path FROM products WHERE created_by = ? ORDER BY created_at DESC");
+                    $result = $query->execute(
+                        array(
+                            htmlentities($created_by)
+                        )
+                    );
+                    $result = $query;
 
-                    if ($statement->rowCount() > 0) {
-                        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    if ($result->rowCount() > 0) {
+                        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($rows as $row) {
                             ?>
                             <div class="col-md-12 col-lg-4 mb-4">
@@ -288,18 +297,22 @@ $db = new DatabaseConnection();
     <div class="tab-pane" id="fill-tabpanel-2" role="tabpanel" aria-labelledby="fill-tab-2">
 
         <?php
-        $sql = "SELECT * FROM users WHERE id != ? ORDER BY created_at DESC;";
         $id = $_SESSION['user']['id'];
-        $queryArgs = array($id);
-        $statement = $db->executePreparedQuery($sql, $queryArgs);
-        if ($statement->rowCount() > 0) {
+        $query = $conn->prepare("SELECT * FROM users WHERE id != ? ORDER BY created_at DESC");
+        $query->execute(
+            array(
+                htmlentities($id)
+            )
+        );
+        $result = $query;
+        if ($result->rowCount() > 0) {
             ?>
 
             <div class="chat-container clearfix">
                 <div class="people-list" id="people-list">
                     <ul class="list">
                         <?php
-                        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($rows as $row) {
                             ?>
                             <li class="clearfix">

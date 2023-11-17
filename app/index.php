@@ -34,13 +34,17 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $sql = "SELECT id,username,password,display_name,mobile_number FROM users WHERE username = ?";
-        $args = array($username);
-        $statement = $db->executePreparedQuery($sql, $args);
-
-        if ($statement->rowCount() > 0) {
+        $conn = $db->getConn();
+        $query = $conn->prepare("SELECT id,username,password,display_name,mobile_number FROM users WHERE username = ?");
+        $query->execute(
+            array(
+                htmlentities($username)
+            )
+        );
+        $result = $query;
+        if ($result->rowCount() > 0) {
             // Fetch the result
-            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
 
             $stored_hashed_password = $row['password'];
 

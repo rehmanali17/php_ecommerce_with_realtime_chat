@@ -12,9 +12,13 @@ try{
     $data = json_decode($request_data, true);
     $productId = $data['id'];
 
-    $sql = "DELETE FROM products where id = ?";
-    $queryArgs = array($productId);
-    $statement = $db->executePreparedQuery($sql, $queryArgs);
+    $conn = $db->getConn();
+    $query = $conn->prepare("DELETE FROM products where id = ?");
+    $query->execute(
+        array(
+            htmlentities($productId)
+        )
+    );
 
     $_SESSION['alert-message'] = 'Product deleted successfully';
     $_SESSION['alert-type'] = 'alert-success';

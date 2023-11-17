@@ -10,8 +10,17 @@ try {
 
     $sql = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?";
     $productData = json_decode($_POST['productData'], true);
-    $queryArgs = array($productData['name'], $productData['description'], $productData['price'], $productData['quantity'], $productData['id']);
-    $statement = $db->executePreparedQuery($sql, $queryArgs);
+    $conn = $db->getConn();
+    $query = $conn->prepare("UPDATE products SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?");
+    $query->execute(
+        array(
+            htmlentities($productData['name']),
+            htmlentities($productData['description']),
+            htmlentities($productData['price']),
+            htmlentities($productData['quantity']),
+            htmlentities($productData['id'])
+        )
+    );
     $_SESSION['alert-message'] = 'Product updated successfully';
     $_SESSION['alert-type'] = 'alert-success';
 } catch (Exception $exception) {
